@@ -16,16 +16,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<html>
-<head lang="de">
-    <meta charset="UTF-8">
+<html lang="{% block html_lang %}de{% endblock %}" {% block html_attrs %}{% endblock %}>
+<head>
+    <meta charset="{% block charset %}UTF-8{% endblock %}">
     <title>{% block title %}{% endblock %}</title>
 
     {% block head %}
 
     {% endblock %}
 </head>
-<body>
+<body {% block body_attrs %}{% endblock %}>
 {% block content %}
 
 {% endblock %}
