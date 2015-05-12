@@ -36,13 +36,13 @@ class Camera:
 
     def getImage(self):
         """
-        :return: Image
+        :return: PIL.Image.Image
         """
         pass
 
     def getThumbnailImage(self):
         """
-        :return: Image
+        :return: PIL.Image.Image
         """
         pass
 
