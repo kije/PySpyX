@@ -28,6 +28,7 @@ except ImportError:
 
 import subprocess
 from PIL import Image
+import netifaces
 
 
 class Camera:
@@ -50,8 +51,13 @@ class Camera:
         """
         :return: string
         """
-        pass
+        return "rtsp://%s:8554" % (self.getIp())
 
+    def getIp(self):
+        """
+        :return: string
+        """
+        pass
 
 class LocalCamera(Camera):
     def __init__(self):
@@ -76,7 +82,19 @@ class LocalCamera(Camera):
         return im
 
     def getIp(self):
-        pass
+        """
+        :return: string
+        """
+        interfaces = netifaces.interfaces()
+        for i in interfaces:
+            if i.startswith('lo'):
+                continue
+
+            iface = netifaces.ifaddresses(i).get(netifaces.AF_INET)
+            if iface != None:
+                for j in iface:
+                    return j['addr']
+
 
 
 class RemoteCamera(Camera):
