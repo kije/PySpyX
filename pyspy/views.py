@@ -29,3 +29,7 @@ def index(request):
     template = loader.get_template('pyspy/index.html')
     context = RequestContext(request)
     return HttpResponse(template.render(context))
+
+
+def control_cam(request):
+    pass

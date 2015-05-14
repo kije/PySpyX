@@ -42,5 +42,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^(?:index)?/?$', 'pyspy.views.index', name='index')
+    url(r'^(?:index)?/?$', 'pyspy.views.index', name='index'),
+    url(r'^cam/control/', 'pyspy.views.control_cam', name='cam_control')
 ]
