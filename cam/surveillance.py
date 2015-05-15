@@ -23,27 +23,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __author__ = 'kije'
 
 import threading
-from cam import camera
 import time
 
 
 """ http://www.maketecheasier.com/setup-motion-detection-webcam-ubuntu/ -> Motion """
 
 
-class Motion:
+class Surveillance:
     """
-    @type motionDetectionThread: MotionDetectionThread
-    @type camera: camera.Camera
+    @type motionDetectionThread: SurveillanceDetectionThread
+    @type camera: cam.camera.Camera
     """
-    motionDetectionThread = None
-    camera = None
 
     def __init__(self, camera):
         """
-        :param camera: camera.Camera
+        :param camera: cam.camera.Camera
         """
         self.camera = camera
-        self.motionDetectionThread = MotionDetectionThread(self)
+        self.motionDetectionThread = ManualSurveillanceDetectionThread(self)
 
     def startMotionDetection(self):
         if not self.motionDetectionIsStarted():
@@ -55,10 +52,11 @@ class Motion:
 
     def motionDetectionIsStarted(self):
         """
-        :rtype boolean
+        :return: boolean
         """
-        return self.motionDetectionThread != None and \
-               self.motionDetectionThread.isAlive()
+        return \
+            self.motionDetectionThread is None and \
+            self.motionDetectionThread.isAlive()
 
     def toggleMotionDetection(self):
         if self.motionDetectionIsStarted():
@@ -67,32 +65,18 @@ class Motion:
             self.startMotionDetection()
 
 
-class MotionDetectionThread(threading.Thread):
+class SurveillanceDetectionThread(threading.Thread):
     """
-    @type lastCapture: time
-    @type image1: PIL.Image.Image
-    @type image2: PIL.Image.Image
-
-    @type motion: Motion
+    @type surveillance: Surveillance
     @type threshold: int
     @type sensitivity: int
     @type forceCapture: boolean
     @type forceCaptureTime: int
     """
-    lastCapture = None
-    image1 = None
-    image2 = None
 
-    motion = None
-    threshold = 10  # todo -> threshold & sensitivity as percent (not absolute pixel value)
-    sensitivity = 20
-    forceCapture = False
-    forceCaptureTime = 60 * 60  # Once an hour
-
-
-    def __init__(self, motion, threshold=10, sensitivity=20, forceCapture=False, forceCaptureTime=60 * 60):
+    def __init__(self, surveillance, threshold=10, sensitivity=20, forceCapture=False, forceCaptureTime=60 * 60):
         """
-        :param motion: Motion
+        :param surveillance: Surveillance
         :param threshold: int
         :param sensitivity: int
         :param forceCapture: boolean
@@ -100,19 +84,41 @@ class MotionDetectionThread(threading.Thread):
         """
         super().__init__()
 
-        self.motion = motion
+        self.surveillance = surveillance
         self.threshold = threshold
         self.sensitivity = sensitivity
         self.forceCapture = forceCapture
         self.forceCaptureTime = forceCaptureTime
 
 
+class ManualSurveillanceDetectionThread(SurveillanceDetectionThread):
+    """
+    @type lastCapture: time
+    @type image1: PIL.Image.Image
+    @type image2: PIL.Image.Image
+    """
+
+    def __init__(self, surveillance, threshold=10, sensitivity=20, forceCapture=False, forceCaptureTime=60 * 60):
+        """
+        :param surveillance: Surveillance
+        :param threshold: int
+        :param sensitivity: int
+        :param forceCapture: boolean
+        :param forceCaptureTime: int
+        """
+        super().__init__(surveillance, threshold, sensitivity, forceCapture, forceCaptureTime)
+
+        self.lastCapture = None
+        self.image1 = None
+        self.image2 = None
+
+
     def run(self):
-        self.detectMotion(self.motion.camera)
+        self.detectMotion(self.surveillance.camera)
 
     def detectMotion(self, camera):
         """
-        :param camera: camera.Camera
+        :param camera: cam.camera.Camera
         """
         # Get first image
         self.image1 = camera.getThumbnailImage()
@@ -142,7 +148,7 @@ class MotionDetectionThread(threading.Thread):
                 if time.time() - self.lastCapture > self.forceCaptureTime:
                     changedPixels = self.sensitivity + 1
 
-            # Save an image if pixels changed
+            # Trigger onMotion if motion detected
             if changedPixels > self.sensitivity:
                 self.onMotion()
 

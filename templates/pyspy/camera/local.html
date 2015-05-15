@@ -1,45 +1,33 @@
+{# @type camera: cam.camera.LocalCamera #}
 <section class="cam-container local-camera">
     <h1>Local camera</h1>
 
-    <div class="video-container">
-        {#  todo only display if stream started #}
-        <embed
-                type="application/x-vlc-plugin"
-                pluginspage="http://www.videolan.org"
-                width="100%"
-                height="100%"
-                id="vlc"
-                loop="yes"
-                autoplay="yes"
-                target="rtsp://quicktime.uvm.edu:1554/waw/wdi05hs2b.mov"
-                >
-            <a class="stream-link" href="rtsp://quicktime.uvm.edu:1554/waw/wdi05hs2b.mov">
-                Click here to open streams
-            </a>
-        </embed>
-    </div>
-    <form method="post" action="{% url 'pyspy.views.control_cam' %}" class="controls-container">
+    {% include 'pyspy/camera/stream_embed.html' %}
+
+    <form method="post" action="{% url 'pyspy.views.control_local_cam' %}" class="controls-container">
         {% csrf_token %}
-        <input type="hidden" name="type" value="local"/>
         <ul class="controls clearfix">
-            {#  todo only display this button, if anything is going on #}
-            <li>
-                <button class="button" type="submit" name="stop" value="1">
-                    <span>Turn off</span>
-                </button>
-            </li>
-            {#  todo only display this button, if stream is not started #}
-            <li>
-                <button class="button" type="submit" name="stream_start" value="1">
-                    <span>Start stream</span>
-                </button>
-            </li>
-            {#  todo only display this button, if surveillance is not started #}
-            <li>
-                <button class="button" type="submit" name="surveillance_start" value="1">
-                    <span>Start surveillance</span>
-                </button>
-            </li>
+            {% if camera.isStreamReachable or camera.isSurveillanceOn %}
+                <li>
+                    <button class="button" type="submit" name="stop" value="1">
+                        <span>Turn off</span>
+                    </button>
+                </li>
+            {% endif %}
+            {% if not camera.isStreamReachable %}
+                <li>
+                    <button class="button" type="submit" name="stream_start" value="1">
+                        <span>Start stream</span>
+                    </button>
+                </li>
+            {% endif %}
+            {% if not camera.isSurveillanceOn %}
+                <li>
+                    <button class="button" type="submit" name="surveillance_start" value="1">
+                        <span>Start surveillance</span>
+                    </button>
+                </li>
+            {% endif %}
         </ul>
     </form>
 </section>

@@ -43,5 +43,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^(?:index)?/?$', 'pyspy.views.index', name='index'),
-    url(r'^cam/control/', 'pyspy.views.control_cam', name='cam_control')
+    url(r'^cam/local/control/', 'pyspy.views.control_local_cam', name='cam_local_control'),
+    url(r'^cam/status/', 'pyspy.views.cam_status', name='cam_status')
 ]

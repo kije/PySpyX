@@ -14,11 +14,23 @@
 
         </header>
         <div class="inner-wrapper">
-            <ul class="cam-list clearfix">
-                <li class="big">
-                    {% include "pyspy/camera/local.html" %}
-                </li>
-            </ul>
+            {% if cameras %}
+                <ul class="cam-list clearfix">
+                    {% for camera in cameras %}
+                        {# @type camera: cam.camera.Camera #}
+
+                        <li{% if camera.isRemote %} class="big" {% endif %}>
+                            {% if camera.isRemote %}
+                                {% include "pyspy/camera/remote.html" %}
+                            {% else %}
+                                {% include "pyspy/camera/local.html" %}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No Cameras at the moment.</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

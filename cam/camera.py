@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from cam.surveillance import Surveillance
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
+import subprocess
+from PIL import Image
+import netifaces
+import socket
 
 """
 Camera Surveillance tool for Raspberry Pi with Camera module Project in ICT M152.
@@ -21,19 +32,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = 'kije'
 
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
 
-import subprocess
-from PIL import Image
-import netifaces
+def isReachable(ip, port, timeout=5):
+    """
+    :param ip: string
+    :param port: int
+    :param timeout: float
+    :return:
+    """
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        try:
+            s.settimeout(timeout)
+            s.connect((ip, port))
+            return True
+        except socket.error as e:
+            # todo maybe log
+            return False
 
 
 class Camera:
+    CAM_STREAMING_PORT = 8554
+
     def __init__(self):
-        pass
+        self.__is_reachable = {}
 
     def getImage(self):
         """
@@ -51,7 +72,7 @@ class Camera:
         """
         :return: string
         """
-        return "rtsp://%s:8554" % (self.getIp())
+        return "rtsp://%s:%d" % (self.getIp(), self.CAM_STREAMING_PORT)
 
     def getIp(self):
         """
@@ -59,9 +80,41 @@ class Camera:
         """
         pass
 
+    def isRemote(self):
+        """
+        :return: boolean
+        """
+        pass
+
+    def isStreamReachable(self):
+        """
+        Check if the stream is reachable
+        :return: boolean
+        """
+        return self.isReachable(self.CAM_STREAMING_PORT)
+
+    def isReachable(self, port, timeout=2):
+        """
+        returns if a port is reachable. result will be cached
+        :param port: int
+        :param timeout: float
+        :return: boolean
+        """
+        if port not in self.__is_reachable:
+            self.__is_reachable.update({port: isReachable(self.getIp(), port, timeout)})
+
+        return self.__is_reachable[port]
+
+
 class LocalCamera(Camera):
+    """
+    @type surveillance: Surveillance
+    """
+
     def __init__(self):
         super().__init__()
+        self.__is_reachable = {}
+        self.surveillance = Surveillance(self)
 
     def getImage(self):
         command = "raspistill -t 0 -e bmp -o -"
@@ -95,7 +148,110 @@ class LocalCamera(Camera):
                 for j in iface:
                     return j['addr']
 
+    def isRemote(self):
+        """
+        :return: boolean
+        """
+        return False
+
+    def isReachable(self, port, timeout=2):
+        """
+        returns if a port is reachable. result will be cached
+        :param port: int
+        :param timeout: float
+        :return: boolean
+        """
+        if port not in self.__is_reachable:
+            self.__is_reachable.update({port: isReachable('127.0.0.1', port, timeout)})  # faster
+
+        return self.__is_reachable[port]
+
+    def startStreaming(self):
+        """
+        Starts the stream (if not already started)
+        """
+        if not self.isStreamOn():
+            pass
+
+
+    def stopStreaming(self):
+        """
+        Stops the stream (if started)
+        """
+        if self.isStreamOn():
+            pass
+
+    def startSurveillance(self):
+        """
+        Starts the surveillance mode (if not already started)
+        """
+        if not self.isSurveillanceOn():
+            self.surveillance.startMotionDetection()
+
+    def stopSurveillance(self):
+        """
+        Stops the surveillance mode (if started)
+        """
+        if self.isSurveillanceOn():
+            self.surveillance.stopMotionDetection()
+
+    def stopAll(self):
+        """
+        Stops every activity (streaming, surveillance). Turns the camera "off"
+        """
+        self.stopSurveillance()
+        self.stopStreaming()
+
+    def isSurveillanceOn(self):
+        """
+        Check if surveillance mode is on
+        :return: boolean
+        """
+        return self.surveillance.motionDetectionIsStarted()
+
+    def isStreamOn(self):
+        """
+        Check if stream is started
+        :return: boolean
+        """
+        # todo maybe check here if script already running instead of if the stream is reachable
+        return self.isStreamReachable()
+
 
 
 class RemoteCamera(Camera):
-    pass
+    """
+    @type camera: pyspy.models.Camera
+    """
+
+    def __init__(self, camera):
+        """
+        :param camera: pyspy.models.Camera
+        """
+        super().__init__()
+        self.camera = camera
+
+
+    def getIp(self):
+        """
+        :return: string
+        """
+        return self.camera.ip
+
+    def isRemote(self):
+        """
+        :return: boolean
+        """
+        return True
+
+    def getImage(self):
+        """
+        :return: PIL.Image.Image
+        """
+        pass
+
+    def getThumbnailImage(self):
+        """
+        :return: PIL.Image.Image
+        """
+        pass
