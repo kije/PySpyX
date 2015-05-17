@@ -8,7 +8,9 @@ Website: [kije.github.io/PySpyX](https://kije.github.io/PySpyX/)
 ## Requirement
 See [stable-req.txt](stable-req.txt) for Python requirements.
 
-Tested with PyPy3 ([PyPy3 2.4.0](http://pypy.org/download.html))
+Run <code>pip install -r stable-req.txt</code> to install dependencies
+
+Tested with **Python 3.4**
 
 
 ## Project Overview
