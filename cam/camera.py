@@ -110,23 +110,58 @@ class LocalCamera(Camera):
     """
     @type surveillance: Surveillance
     """
+    CAM_CAPTURE_PHOTO_CMD = "raspistill"
+    CAM_CAPTURE_VIDEO_CMD = "raspivid"
 
     def __init__(self):
         super().__init__()
         self.__is_reachable = {}
         self.surveillance = Surveillance(self)
 
+    def captureVideo(self, path, length=15000, width=None, height=None):
+        """
+        :param path: string
+        :param length: int length in milliseconds
+        :param width: int|None
+        :param height: int|None
+        :return: boolean
+        :raise: subprocess.CalledProcessError:
+        """
+        command = "%s -t %d %s %s -o %s -n" % (
+            self.CAM_CAPTURE_VIDEO_CMD,
+            length,
+            "-w %s" % width if width is not None else "",
+            "-h %s" % height if width is not None else "",
+            path  # todo make sure path is not malicious
+        )
+        return subprocess.check_call(command, shell=True)
+
     def getImage(self):
-        command = "raspistill -t 0 -e bmp -o -"
-        imageData = StringIO()
-        imageData.write(subprocess.check_output(command, shell=True))
-        imageData.seek(0)
-        im = Image.open(imageData)
-        imageData.close()
-        return im
+        """
+        :return: PIL.Image.Image
+        :raises subprocess.CalledProcessError:
+        """
+        return self.__getImage__()
 
     def getThumbnailImage(self):
-        command = "raspistill -w %s -h %s -t 0 -e bmp -o -" % (200, 150)
+        """
+        :return: PIL.Image.Image
+        :raises subprocess.CalledProcessError:
+        """
+        return self.__getImage__(200, 150)
+
+    def __getImage__(self, width=None, height=None):
+        """
+        :param width: int | None
+        :param height: int | None
+        :return: PIL.Image.Image
+        :raises subprocess.CalledProcessError:
+        """
+        command = "%s %s %s -t 0 -e bmp -o -" % (
+            self.CAM_CAPTURE_PHOTO_CMD,
+            "-w %s" % width if width is not None else "",
+            "-h %s" % height if width is not None else "",
+        )
         imageData = StringIO()
         imageData.write(subprocess.check_output(command, shell=True))
         imageData.seek(0)

@@ -24,8 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = 'kije'
 
-
-""" http://www.maketecheasier.com/setup-motion-detection-webcam-ubuntu/ -> Motion """
+"""
+http://www.maketecheasier.com/setup-motion-detection-webcam-ubuntu/ -> Motion
+http://bits.citrusbyte.com/motion-detection-with-raspberry-pi/ -> Motion detection
+"""
 
 
 class Surveillance:
@@ -165,5 +167,9 @@ class ManualSurveillanceDetectionThread(SurveillanceDetectionThread):
         """
         :param camera: cam.camera.Camera
         """
-        self.lastCapture = time.time()
-        # todo capture video
+        try:
+            camera.captureVideo("")
+            self.lastCapture = time.time()
+            # todo save to db
+        except CalledProcessError as e:
+            print(str(e))
