@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from subprocess import CalledProcessError
+import threading
+import time
 
 """
 Camera Surveillance tool for Raspberry Pi with Camera module Project in ICT M152.
@@ -21,9 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 __author__ = 'kije'
-
-import threading
-import time
 
 
 """ http://www.maketecheasier.com/setup-motion-detection-webcam-ubuntu/ -> Motion """
@@ -121,40 +120,50 @@ class ManualSurveillanceDetectionThread(SurveillanceDetectionThread):
         :param camera: cam.camera.Camera
         """
         # Get first image
-        self.image1 = camera.getThumbnailImage()
-        buffer1 = self.image1.load()
+        try:
+            self.image1 = camera.getThumbnailImage()
+            buffer1 = self.image1.load()
 
-        # Reset last capture time
-        self.lastCapture = time.time()
+            # Reset last capture time
+            self.lastCapture = time.time()
 
-        while (True):
-            # Get comparison image
-            self.image2 = camera.getThumbnailImage()
-            buffer2 = self.image2.load()
+            while True:
+                try:
+                    # Get comparison image
+                    self.image2 = camera.getThumbnailImage()
+                    buffer2 = self.image2.load()
 
-            (width, height) = self.image2.size
+                    (width, height) = self.image2.size
 
-            # Count changed pixels
-            changedPixels = 0
-            for x in range(0, width):
-                for y in range(0, height):
-                    # Just check green channel as it's the highest quality channel
-                    pixdiff = abs(buffer1[x, y][1] - buffer2[x, y][1])
-                    if pixdiff > self.threshold:
-                        changedPixels += 1
+                    # Count changed pixels
+                    changedPixels = 0
+                    for x in range(0, width):
+                        for y in range(0, height):
+                            # Just check green channel as it's the highest quality channel
+                            pixdiff = abs(buffer1[x, y][1] - buffer2[x, y][1])
+                            if pixdiff > self.threshold:
+                                changedPixels += 1
 
-            # Check force capture
-            if self.forceCapture:
-                if time.time() - self.lastCapture > self.forceCaptureTime:
-                    changedPixels = self.sensitivity + 1
+                    # Check force capture
+                    if self.forceCapture:
+                        if time.time() - self.lastCapture > self.forceCaptureTime:
+                            changedPixels = self.sensitivity + 1
 
-            # Trigger onMotion if motion detected
-            if changedPixels > self.sensitivity:
-                self.onMotion()
+                    # Trigger onMotion if motion detected
+                    if changedPixels > self.sensitivity:
+                        self.onMotion(camera)
 
-            # Swap comparison buffers
-            self.image1 = self.image2
+                    # Swap comparison buffers
+                    self.image1 = self.image2
 
-    def onMotion(self):
+                except CalledProcessError as e:
+                    print(str(e))
+        except CalledProcessError as e:
+            print(str(e))
+
+    def onMotion(self, camera):
+        """
+        :param camera: cam.camera.Camera
+        """
         self.lastCapture = time.time()
         # todo capture video
