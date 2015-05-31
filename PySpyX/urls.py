@@ -36,12 +36,9 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url
-from django.contrib import admin
+from django.conf.urls import url
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-
     url(r'^(?:index)?/?$', 'pyspy.views.index', name='index'),
     url(r'^cam/local/control/', 'pyspy.views.control_local_cam', name='cam_local_control'),
     url(r'^cam/status/', 'pyspy.views.cam_status', name='cam_status'),
