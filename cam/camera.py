@@ -59,18 +59,6 @@ class Camera:
     def __init__(self):
         pass
 
-    def getImage(self):
-        """
-        :return: PIL.Image.Image
-        """
-        pass
-
-    def getThumbnailImage(self):
-        """
-        :return: PIL.Image.Image
-        """
-        pass
-
     def getStreamUrl(self):
         """
         :return: string
@@ -343,15 +331,3 @@ class RemoteCamera(Camera):
         :return: boolean
         """
         return True
-
-    def getImage(self):
-        """
-        :return: PIL.Image.Image
-        """
-        pass
-
-    def getThumbnailImage(self):
-        """
-        :return: PIL.Image.Image
-        """
-        pass
