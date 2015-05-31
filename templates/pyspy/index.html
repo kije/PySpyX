@@ -14,12 +14,27 @@
 
         </header>
         <div class="inner-wrapper">
+            <form class="camera-add-container" action="{% url 'pyspy.views.add_camera' %}" method="post">
+                <h3>Add new Cam</h3>
+                {% csrf_token %}
+                <input
+                        type="text"
+                        name="ip"
+                        placeholder="IP-Address (e.g. 192.168.10.5)"
+                        pattern="((((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$)|(((^|:)([0-9a-fA-F]{0,4})){1,8}$))"
+                        required="required"
+                        />
+                <input type="text" name="name" placeholder="Name"/>
+                <button type="submit">
+                    Add
+                </button>
+            </form>
             {% if cameras %}
                 <ul class="cam-list clearfix">
                     {% for camera in cameras %}
                         {# @type camera: cam.camera.Camera #}
 
-                        <li{% if camera.isRemote %} class="big" {% endif %}>
+                        <li{% if not camera.isRemote %} class="big" {% endif %}>
                             {% if camera.isRemote %}
                                 {% include "pyspy/camera/remote.html" %}
                             {% else %}
@@ -29,7 +44,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No Cameras at the moment.</p>
+                <p>No Cameras</p>
             {% endif %}
         </div>
     </div>

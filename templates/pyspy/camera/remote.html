@@ -1,6 +1,14 @@
 {# @type camera: cam.camera.RemoteCamera #}
 <section class="cam-container remote-camera">
-    <h1>Remote camera &laquo;{{ camera.camera.name }}&raquo;</h1>
+    <h1>Remote camera &laquo;{{ camera.camera.name }}&raquo; (<code>{{ camera.camera.ip }}</code>)</h1>
 
     {% include 'pyspy/camera/stream_embed.html' %}
+    {# todo button to remove old cam #}
+    <form action="{% url 'pyspy.views.delete_cam' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="cam" value="{{ camera.camera.id }}">
+        <button type="submit">
+            Delete
+        </button>
+    </form>
 </section>

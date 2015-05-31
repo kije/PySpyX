@@ -44,5 +44,7 @@ urlpatterns = [
 
     url(r'^(?:index)?/?$', 'pyspy.views.index', name='index'),
     url(r'^cam/local/control/', 'pyspy.views.control_local_cam', name='cam_local_control'),
-    url(r'^cam/status/', 'pyspy.views.cam_status', name='cam_status')
+    url(r'^cam/status/', 'pyspy.views.cam_status', name='cam_status'),
+    url(r'^cam/add/', 'pyspy.views.add_camera', name='add_camera'),
+    url(r'^cam/delete/', 'pyspy.views.delete_cam', name='delete_camera')
 ]

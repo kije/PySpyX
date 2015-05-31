@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_ipv46_address
 from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.template import RequestContext, loader
@@ -76,3 +78,48 @@ def cam_status(request):
         'ip': cam.getIp(),
         'stream_url': cam.getStreamUrl()
     })
+
+
+def add_camera(request):
+    if "ip" in request.POST:
+        ip = request.POST["ip"]
+        name = request.POST["name"] if "name" in request.POST else None
+
+        try:
+            validate_ipv46_address(ip)
+
+            try:
+                cam = Camera.objects.get(ip=ip)
+
+                # todo message to user?
+                if name is not None:
+                    cam.name = name
+                    cam.save()
+            except Camera.DoesNotExist:
+                cam = Camera(ip=ip, name=name)
+                cam.save()
+
+            if cam:
+                return redirect('pyspy.views.index')
+        except ValidationError:
+            pass  # todo message to user
+
+    return HttpResponseBadRequest(content=b"Bad request!")
+
+
+def delete_cam(request):
+    if "cam" in request.POST:
+        id = request.POST["cam"]
+
+        try:
+            cam = Camera.objects.get(pk=id)
+
+            cam.delete()
+
+            return redirect('pyspy.views.index')
+
+        except Camera.DoesNotExist:
+            # todo message to user
+            pass
+
+    return HttpResponseBadRequest(content=b"Bad request!")
