@@ -112,6 +112,7 @@ class LocalCamera(Camera):
     """
     CAM_CAPTURE_PHOTO_CMD = "raspistill"
     CAM_CAPTURE_VIDEO_CMD = "raspivid"
+    CAM_VLC_CMD = "cvlc"
 
     def __init__(self):
         super().__init__()
@@ -127,14 +128,27 @@ class LocalCamera(Camera):
         :return: boolean
         :raise: subprocess.CalledProcessError:
         """
-        command = "%s -t %d %s %s -o %s -n" % (
+        return subprocess.check_call(
+            self.__getVideoCmd__(path=path, length=length, width=width, height=height),
+            shell=True
+        )
+
+    def __getVideoCmd__(self, path="-", length=15000, width=None, height=None, fps=None):
+        """
+        :param path: string
+        :param length: int length in milliseconds
+        :param width: int|None
+        :param height: int|None
+        :return: string
+        """
+        return "%s -t %d %s %s %s -o %s -n" % (
             self.CAM_CAPTURE_VIDEO_CMD,
             length,
             "-w %s" % width if width is not None else "",
             "-h %s" % height if width is not None else "",
+            "-fps %d" % fps if fps is not None else "",
             path  # todo make sure path is not malicious
         )
-        return subprocess.check_call(command, shell=True)
 
     def getImage(self):
         """
@@ -157,17 +171,24 @@ class LocalCamera(Camera):
         :return: PIL.Image.Image
         :raises subprocess.CalledProcessError:
         """
-        command = "%s %s %s -t 0 -e bmp -o -" % (
-            self.CAM_CAPTURE_PHOTO_CMD,
-            "-w %s" % width if width is not None else "",
-            "-h %s" % height if width is not None else "",
-        )
         imageData = StringIO()
-        imageData.write(subprocess.check_output(command, shell=True))
+        imageData.write(subprocess.check_output(self.__getImageCmd__(width=width, height=height), shell=True))
         imageData.seek(0)
         im = Image.open(imageData)
         imageData.close()
         return im
+
+    def __getImageCmd__(self, width=None, height=None):
+        """
+        :param width: int | None
+        :param height: int | None
+        :return:
+        """
+        return "%s %s %s -t 0 -e bmp -o -" % (
+            self.CAM_CAPTURE_PHOTO_CMD,
+            "-w %s" % width if width is not None else "",
+            "-h %s" % height if width is not None else "",
+        )
 
     def getIp(self):
         """
@@ -201,16 +222,36 @@ class LocalCamera(Camera):
 
         return self.__is_reachable[port]
 
-    def startStreaming(self):
+    def startStreaming(self, width=1200, height=800, fps=15):
         """
         Starts the stream (if not already started)
+        :param width: int
+        :param height: int
+        :param fps: int
         """
         if not self.isStreamOn():
-            pass
+            return subprocess.check_call(
+                self.__getStreamingCmd__(width=width, height=height),
+                shell=True
+            )
+
+    def __getStreamingCmd__(self, width=1200, height=800, fps=15):
+        """
+
+        :param width: int
+        :param height: int
+        :param fps: int
+        :return: string
+        """
+        return "%s | %s -vvv stream:///dev/stdin --sout '#rtp{sdp=rtsp://:%d/}' :demux=h264" % (
+            self.__getVideoCmd__(path="-", length=0, width=width, height=height, fps=fps),
+            self.CAM_VLC_CMD,
+            self.CAM_STREAMING_PORT
+        )
 
 
     def stopStreaming(self):
-        """
+        """s
         Stops the stream (if started)
         """
         if self.isStreamOn():
