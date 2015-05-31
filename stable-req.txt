@@ -5,3 +5,4 @@ netifaces==0.10.4
 Pillow==2.8.1
 Pillow-PIL==0.1.dev0
 readline==6.2.4.1
+uwsgi==2.0.10
