@@ -26,12 +26,7 @@ from django.db import models
 # Create your models here.
 
 class Camera(models.Model):
-    ip = models.GenericIPAddressField(unpack_ipv4=True, verbose_name="IP")
+    ip = models.GenericIPAddressField(unpack_ipv4=True, verbose_name="IP", unique=True)
     name = models.CharField(max_length=150, null=True, blank=True, verbose_name="Name")
     last_modified = models.DateTimeField(verbose_name='Last modified', null=True, editable=False, auto_now=True)
 
-
-class SurveillanceVideo(models.Model):
-    date = models.DateTimeField(verbose_name='Capture Date', auto_now=False, auto_now_add=True)
-    path = models.CharField(max_length=512, null=False, verbose_name="Path")
-    last_modified = models.DateTimeField(verbose_name='Last modified', null=True, editable=False, auto_now=True)
