@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+import psutil
+
 from cam.surveillance import Surveillance
+
 
 try:
     from StringIO import StringIO
@@ -32,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = 'kije'
 
-
 def isReachable(ip, port, timeout=5):
     """
     :param ip: string
@@ -54,7 +57,7 @@ class Camera:
     CAM_STREAMING_PORT = 8554
 
     def __init__(self):
-        self.__is_reachable = {}
+        pass
 
     def getImage(self):
         """
@@ -93,17 +96,14 @@ class Camera:
         """
         return self.isReachable(self.CAM_STREAMING_PORT)
 
-    def isReachable(self, port, timeout=2):
+    def isReachable(self, port, timeout=1):
         """
         returns if a port is reachable. result will be cached
         :param port: int
         :param timeout: float
         :return: boolean
         """
-        if port not in self.__is_reachable:
-            self.__is_reachable.update({port: isReachable(self.getIp(), port, timeout)})
-
-        return self.__is_reachable[port]
+        return isReachable(self.getIp(), port, timeout)
 
 
 class LocalCamera(Camera):
@@ -113,10 +113,10 @@ class LocalCamera(Camera):
     CAM_CAPTURE_PHOTO_CMD = "raspistill"
     CAM_CAPTURE_VIDEO_CMD = "raspivid"
     CAM_VLC_CMD = "cvlc"
+    CAM_MOTION_CMD = "motion"
 
     def __init__(self):
         super().__init__()
-        self.__is_reachable = {}
         self.surveillance = Surveillance(self)
 
     def captureVideo(self, path, length=15000, width=None, height=None):
@@ -210,17 +210,14 @@ class LocalCamera(Camera):
         """
         return False
 
-    def isReachable(self, port, timeout=2):
+    def isReachable(self, port, timeout=0.2):
         """
         returns if a port is reachable. result will be cached
         :param port: int
         :param timeout: float
         :return: boolean
         """
-        if port not in self.__is_reachable:
-            self.__is_reachable.update({port: isReachable('127.0.0.1', port, timeout)})  # faster
-
-        return self.__is_reachable[port]
+        return isReachable('127.0.0.1', port, timeout)  # faster & up to date value
 
     def startStreaming(self, width=1200, height=800, fps=15):
         """
@@ -230,7 +227,7 @@ class LocalCamera(Camera):
         :param fps: int
         """
         if not self.isStreamOn():
-            return subprocess.check_call(
+            subprocess.Popen(
                 self.__getStreamingCmd__(width=width, height=height),
                 shell=True
             )
@@ -251,25 +248,31 @@ class LocalCamera(Camera):
 
 
     def stopStreaming(self):
-        """s
+        """
         Stops the stream (if started)
         """
         if self.isStreamOn():
-            pass
+            return subprocess.check_call(
+                "killall %s %s" % (self.CAM_CAPTURE_VIDEO_CMD, self.CAM_VLC_CMD),
+                shell=True
+            )
 
     def startSurveillance(self):
         """
         Starts the surveillance mode (if not already started)
         """
         if not self.isSurveillanceOn():
-            self.surveillance.startMotionDetection()
+            pass  # todo
 
     def stopSurveillance(self):
         """
         Stops the surveillance mode (if started)
         """
         if self.isSurveillanceOn():
-            self.surveillance.stopMotionDetection()
+            return subprocess.check_call(
+                "killall %s" % self.CAM_MOTION_CMD,
+                shell=True
+            )
 
     def stopAll(self):
         """
@@ -283,15 +286,36 @@ class LocalCamera(Camera):
         Check if surveillance mode is on
         :return: boolean
         """
-        return self.surveillance.motionDetectionIsStarted()
+        # check, if motion process is running
+        for p in psutil.process_iter():
+            try:
+                p.exe().lower().index(self.CAM_MOTION_CMD)
+                return True
+            except ValueError:
+                pass
+            except psutil.AccessDenied:
+                pass
+
+        return False
 
     def isStreamOn(self):
         """
         Check if stream is started
         :return: boolean
         """
-        # todo maybe check here if script already running instead of if the stream is reachable
-        return self.isStreamReachable()
+        # check, if streaming process is running
+        for p in psutil.process_iter():
+            try:
+                p.exe().lower().index(self.CAM_VLC_CMD)
+
+                return True
+            except ValueError:
+                pass
+            except psutil.AccessDenied:
+                pass
+
+        return False
+        # return self.isStreamReachable()
 
 
 
