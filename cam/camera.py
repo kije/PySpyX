@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import psutil
 
+from PySpyX.settings import DEBUG
 from cam.surveillance import Surveillance
 
 
@@ -129,7 +130,7 @@ class LocalCamera(Camera):
         :param height: int|None
         :return: string
         """
-        return "%s -t %d %s %s %s -o %s -n" % (
+        return "%s -t %d %s %s %s -o %s -n -hf" % (
             self.CAM_CAPTURE_VIDEO_CMD,
             length,
             "-w %s" % width if width is not None else "",
@@ -228,9 +229,10 @@ class LocalCamera(Camera):
         :param fps: int
         :return: string
         """
-        return "%s | %s -vvv stream:///dev/stdin --sout '#rtp{sdp=rtsp://:%d/}' :demux=h264" % (
+        return "%s | %s %s stream:///dev/stdin --sout '#standard{access=http,mux=ts,dst=:%d}' :demux=h264" % (
             self.__getVideoCmd__(path="-", length=0, width=width, height=height, fps=fps),
             self.CAM_VLC_CMD,
+            ('-vvv' if DEBUG else ''),
             self.CAM_STREAMING_PORT
         )
 
