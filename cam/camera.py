@@ -221,9 +221,8 @@ class LocalCamera(Camera):
                 shell=True
             )
 
-    def __getStreamingCmd__(self, width=1200, height=800, fps=15):
+    def __getStreamingCmd__(self, width=1200, height=800, fps=18):
         """
-
         :param width: int
         :param height: int
         :param fps: int
@@ -298,7 +297,7 @@ class LocalCamera(Camera):
         for p in psutil.process_iter():
             try:
                 p.exe().lower().index(self.CAM_VLC_CMD)
-
+                print("Stream is on")
                 return True
             except ValueError:
                 pass
