@@ -296,8 +296,9 @@ class LocalCamera(Camera):
         # check, if streaming process is running
         for p in psutil.process_iter():
             try:
+                print(p.exe())
                 p.exe().lower().index(self.CAM_VLC_CMD)
-                print("Stream is on")
+
                 return True
             except ValueError:
                 pass
