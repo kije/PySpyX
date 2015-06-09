@@ -130,7 +130,7 @@ class LocalCamera(Camera):
         :param height: int|None
         :return: string
         """
-        return "%s -t %d %s %s %s -o %s -n -hf" % (
+        return "%s -t %d %s %s %s -o %s -n -hf --hflip" % (
             self.CAM_CAPTURE_VIDEO_CMD,
             length,
             "-w %s" % width if width is not None else "",
@@ -229,7 +229,8 @@ class LocalCamera(Camera):
         :param fps: int
         :return: string
         """
-        return "%s | %s %s stream:///dev/stdin --sout '#standard{access=http,mux=ts,dst=:%d}' :demux=h264" % (
+        return "%s | %s %s stream:///dev/stdin --sout '#rtp{sdp=rtsp://:8080/}' :demux=h264" % (
+        # standart http stream '#standard{access=http,mux=ts,dst=:%d}'
             self.__getVideoCmd__(path="-", length=0, width=width, height=height, fps=fps),
             self.CAM_VLC_CMD,
             ('-vvv' if DEBUG else ''),
