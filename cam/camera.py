@@ -228,7 +228,7 @@ class LocalCamera(Camera):
         :param fps: int
         :return: string
         """
-        return "%s | %s %s stream:///dev/stdin --sout '#rtp{sdp=rtsp://:8080/}' :demux=h264" % (
+        return "%s | %s %s stream:///dev/stdin --sout '#rtp{sdp=rtsp://:%d/}' :demux=h264" % (
         # standart http stream '#standard{access=http,mux=ts,dst=:%d}'
             self.__getVideoCmd__(path="-", length=0, width=width, height=height, fps=fps),
             self.CAM_VLC_CMD,
