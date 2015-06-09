@@ -51,6 +51,8 @@ def control_local_cam(request):
         cam = LocalCamera()
         back_redirect_response = redirect('pyspy.views.index')
 
+        print(request.POST)
+
         if "stop" in request.POST:
             cam.stopAll()
             return back_redirect_response
