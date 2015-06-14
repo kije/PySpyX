@@ -74,4 +74,5 @@ class MotionVideo:
         """
         :return: string
         """
+        print(settings.MOTION_VIDEO_URL, self.filename)
         return "%s/%s" % (settings.MOTION_VIDEO_URL, self.filename)
