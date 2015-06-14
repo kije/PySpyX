@@ -5,6 +5,9 @@ import glob
 import os
 import re
 
+from PySpyX import settings
+
+
 """
 Camera Surveillance tool for Raspberry Pi with Camera module Project in ICT M152.
 Copyright (C) 2015  Kim D. Jeker
@@ -66,3 +69,9 @@ class MotionVideo:
         :return: datetime
         """
         return datetime.datetime(self.year, self.month, self.day, self.hour, self.minute, self.second)
+
+    def getVideoUrl(self):
+        """
+        :return: string
+        """
+        return "%s/%s" % (settings.MOTION_VIDEO_URL, self.filename)
