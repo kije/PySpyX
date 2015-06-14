@@ -50,7 +50,7 @@ def isReachable(ip, port, timeout=5):
             s.connect((ip, port))
             return True
         except socket.error as e:
-            # todo maybe log
+            print(e)
             return False
 
 
@@ -253,7 +253,7 @@ class LocalCamera(Camera):
         Starts the surveillance mode (if not already started)
         """
         if not self.isSurveillanceOn():
-            pass  # todo
+            pass  # todo (as sudo)
 
     def stopSurveillance(self):
         """
@@ -262,7 +262,7 @@ class LocalCamera(Camera):
         print("Surveillance", self.isSurveillanceOn())
         if self.isSurveillanceOn():
             return subprocess.check_call(
-                "killall %s" % self.CAM_MOTION_CMD,
+                "sudo killall %s" % self.CAM_MOTION_CMD,
                 shell=True
             )
 
