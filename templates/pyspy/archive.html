@@ -14,7 +14,19 @@
 
         </header>
         <div class="inner-wrapper">
-            {{ videos }}
+            {% if videos %}
+                <ul class="video-list clearfix">
+                    {% for video in videos %}
+                        {# @type video: cam.videos.MotionVideo #}
+                        <li>
+                            {{ video.file }}
+                            {{ vide.getCaptureDate }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No Cameras</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
