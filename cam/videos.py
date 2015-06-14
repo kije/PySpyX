@@ -32,8 +32,8 @@ class MotionVideo:
     def __init__(self, file):
         self.file = file
 
-        dirname, filename = os.path.split(file)
-        matches = re.match(self.VIDEO_PATTERN, filename)
+        dirname, self.filename = os.path.split(file)
+        matches = re.match(self.VIDEO_PATTERN, self.filename)
 
         if matches:
             self.year = int(matches.group(1))
