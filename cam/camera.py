@@ -109,7 +109,6 @@ class LocalCamera(Camera):
 
     def __init__(self):
         super().__init__()
-        self.surveillance = Surveillance(self)
 
     def captureVideo(self, path, length=15000, width=None, height=None):
         """
