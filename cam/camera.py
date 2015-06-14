@@ -99,10 +99,10 @@ class LocalCamera(Camera):
     """
     @type surveillance: Surveillance
     """
-    CAM_CAPTURE_PHOTO_CMD = "raspistill"
-    CAM_CAPTURE_VIDEO_CMD = "raspivid"
-    CAM_VLC_CMD = "cvlc"
-    CAM_MOTION_CMD = "motion"
+    CAM_CAPTURE_PHOTO_CMD = "/usr/bin/raspistill"
+    CAM_CAPTURE_VIDEO_CMD = "/usr/bin/raspivid"
+    CAM_VLC_CMD = "/usr/bin/cvlc"
+    CAM_MOTION_CMD = "/usr/bin/motion"
 
     def __init__(self):
         super().__init__()
