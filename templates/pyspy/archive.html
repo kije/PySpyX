@@ -19,6 +19,9 @@
                     {% for video in videos %}
                         {# @type video: cam.videos.MotionVideo #}
                         <li>
+                            <video>
+                                <source src="{{ video.getVideoUrl }}" type='video/mp4'/>
+                            </video>
                             {{ video.getVideoUrl }}
                             {{ video.getCaptureDate.isoformat }}
                         </li>
