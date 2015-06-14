@@ -46,12 +46,21 @@ def index(request):
     return HttpResponse(template.render(context))
 
 
+def archive(request):
+    cam = LocalCamera()
+    videos = cam.getCapturedMotionVideos()
+
+    template = loader.get_template('pyspy/archive.html')
+    context = RequestContext(request, dict_={
+        "videos": videos
+    })
+    return HttpResponse(template.render(context))
+
+
 def control_local_cam(request):
     if request.method == 'POST':
         cam = LocalCamera()
         back_redirect_response = redirect('pyspy.views.index')
-
-        print(request.POST)
 
         if "stop" in request.POST:
             cam.stopAll()

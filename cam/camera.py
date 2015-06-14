@@ -244,7 +244,6 @@ class LocalCamera(Camera):
         """
         Stops the stream (if started)
         """
-        print("Stream", self.isStreamOn())
         if self.isStreamOn():
             return subprocess.check_call(
                 "killall %s %s" % (self.CAM_CAPTURE_VIDEO_CMD, self.CAM_VLC_CMD),
@@ -271,7 +270,6 @@ class LocalCamera(Camera):
         """
         Stops the surveillance mode (if started)
         """
-        print("Surveillance", self.isSurveillanceOn())
         if self.isSurveillanceOn():
             return subprocess.check_call(
                 "sudo killall %s" % self.CAM_MOTION_CMD,
@@ -284,6 +282,7 @@ class LocalCamera(Camera):
         """
         self.stopStreaming()
         self.stopSurveillance()
+
 
     def isSurveillanceOn(self):
         """
@@ -310,7 +309,6 @@ class LocalCamera(Camera):
         # check, if streaming process is running
         for p in psutil.process_iter():
             try:
-                print(p.exe())
                 p.exe().lower().index(self.CAM_VLC_CMD)
 
                 return True

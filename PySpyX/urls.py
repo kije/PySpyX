@@ -41,6 +41,7 @@ from django.conf.urls import url
 
 urlpatterns = [
     url(r'^(?:index)?/?$', 'pyspy.views.index', name='index'),
+    url(r'^archive/?$', 'pyspy.views.archive', name='archive'),
     url(r'^cam/local/control/', 'pyspy.views.control_local_cam', name='cam_local_control'),
     url(r'^cam/status/', 'pyspy.views.cam_status', name='cam_status'),
     url(r'^cam/add/', 'pyspy.views.add_camera', name='add_camera'),
