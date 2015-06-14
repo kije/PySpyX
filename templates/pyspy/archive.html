@@ -19,7 +19,7 @@
                     {% for video in videos %}
                         {# @type video: cam.videos.MotionVideo #}
                         <li>
-                            {{ video.file }}
+                            {{ video.getVideoUrl }}
                             {{ video.getCaptureDate.isoformat }}
                         </li>
                     {% endfor %}
