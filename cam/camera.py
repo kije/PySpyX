@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import psutil
 
 from PySpyX.settings import DEBUG, MOTION_VIDEO_DIRECTORY, BASE_DIR
-from cam.surveillance import Surveillance
 
 
 try:
@@ -322,6 +321,9 @@ class LocalCamera(Camera):
 
         return False
         # return self.isStreamReachable()
+
+    def getCapturedMotionVideos(self):
+        pass  # todo
 
 
 
