@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import psutil
 
 from PySpyX.settings import DEBUG, MOTION_VIDEO_DIRECTORY, BASE_DIR
+from cam.videos import MotionVideo
 
 
 try:
@@ -322,7 +323,11 @@ class LocalCamera(Camera):
         # return self.isStreamReachable()
 
     def getCapturedMotionVideos(self):
-        pass  # todo
+        """
+        :return: MotionVideo[]
+        """
+        return MotionVideo.getAll(self.VIDEO_DIRECTORY)
+
 
 
 
