@@ -19,7 +19,7 @@
                     {% for video in videos %}
                         {# @type video: cam.videos.MotionVideo #}
                         <li>
-                            <video>
+                            <video controls="controls">
                                 <source src="{{ video.getVideoUrl }}" type='video/mp4'/>
                             </video>
                             {{ video.getVideoUrl }}
