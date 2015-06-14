@@ -104,3 +104,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR + "/static"
+
+MOTION_VIDEO_DIRECTORY = BASE_DIR + "/videos"

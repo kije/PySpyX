@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import psutil
 
-from PySpyX.settings import DEBUG
+from PySpyX.settings import DEBUG, MOTION_VIDEO_DIRECTORY, BASE_DIR
 from cam.surveillance import Surveillance
 
 
@@ -103,6 +103,10 @@ class LocalCamera(Camera):
     CAM_CAPTURE_VIDEO_CMD = "/usr/bin/raspivid"
     CAM_VLC_CMD = "/usr/bin/cvlc"
     CAM_MOTION_CMD = "/usr/bin/motion"
+
+    VIDEO_DIRECTORY = MOTION_VIDEO_DIRECTORY
+
+    MOTION_CONF_FILE = BASE_DIR + '/motion.conf'
 
     def __init__(self):
         super().__init__()
@@ -253,7 +257,16 @@ class LocalCamera(Camera):
         Starts the surveillance mode (if not already started)
         """
         if not self.isSurveillanceOn():
-            pass  # todo (as sudo)
+            subprocess.Popen(
+                self.__getSurveillanceCmd__(),
+                shell=True
+            )
+
+    def __getSurveillanceCmd__(self):
+        """
+        :return: string
+        """
+        return "%s -c %s" % (self.CAM_MOTION_CMD, self.MOTION_CONF_FILE)
 
     def stopSurveillance(self):
         """
