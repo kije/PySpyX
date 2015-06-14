@@ -264,7 +264,7 @@ class LocalCamera(Camera):
         """
         :return: string
         """
-        return "%s -c %s" % (self.CAM_MOTION_CMD, self.MOTION_CONF_FILE)
+        return "sudo %s -c %s" % (self.CAM_MOTION_CMD, self.MOTION_CONF_FILE)
 
     def stopSurveillance(self):
         """
