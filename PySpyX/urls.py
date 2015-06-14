@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import re
+
 from PySpyX import settings
+
 
 """
 Camera Surveillance tool for Raspberry Pi with Camera module Project in ICT M152.
@@ -46,7 +49,7 @@ urlpatterns = [
     url(r'^cam/status/', 'pyspy.views.cam_status', name='cam_status'),
     url(r'^cam/add/', 'pyspy.views.add_camera', name='add_camera'),
     url(r'^cam/delete/', 'pyspy.views.delete_cam', name='delete_camera'),
-    url(r'^%s/(?P<path>.*)$' % settings.MOTION_VIDEO_URL, 'django.views.static.serve', {
+    url(r'^' + re.escape(settings.MOTION_VIDEO_URL) + r'/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': settings.MOTION_VIDEO_DIRECTORY,
     }),
 ]
