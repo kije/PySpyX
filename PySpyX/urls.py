@@ -46,7 +46,7 @@ urlpatterns = [
     url(r'^cam/status/', 'pyspy.views.cam_status', name='cam_status'),
     url(r'^cam/add/', 'pyspy.views.add_camera', name='add_camera'),
     url(r'^cam/delete/', 'pyspy.views.delete_cam', name='delete_camera'),
-    url(r'^' + settings.MOTION_VIDEO_URL + '/(?P<path>.*)$', 'django.views.static.serve', {
+    url(r'^%s/(?P<path>.*)$' % settings.MOTION_VIDEO_URL, 'django.views.static.serve', {
         'document_root': settings.MOTION_VIDEO_DIRECTORY,
     }),
 ]
