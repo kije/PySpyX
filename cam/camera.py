@@ -317,17 +317,16 @@ class LocalCamera(Camera):
 
             is_cmd = False
 
-            try:
-                for cmd_part in cmdln:
+            for cmd_part in cmdln:
+                try:
                     if not is_cmd:
                         cmd_part = cmd_part.lower()
                         cmd_part.index(cmd.lower())
                         is_cmd = True
-
-            except ValueError:
-                pass
-            except psutil.AccessDenied:
-                pass
+                except ValueError:
+                    pass
+                except psutil.AccessDenied:
+                    pass
 
             if is_cmd:
                 return p.pid
