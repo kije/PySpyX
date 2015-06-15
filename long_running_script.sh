@@ -1,3 +1,3 @@
 #!/bin/sh
 
-hexdump /dev/random
+hexdump /dev/urandom
