@@ -294,6 +294,7 @@ class LocalCamera(Camera):
         :return: boolean
         """
         pid = self.getPid(self.CAM_MOTION_CMD)
+        print(pid)
         return bool(pid)
 
     def isStreamOn(self):
@@ -302,6 +303,7 @@ class LocalCamera(Camera):
         :return: boolean
         """
         pid = self.getPid(self.CAM_VLC_CMD)
+        print(pid)
         return bool(pid)
 
     def getPid(self, cmd):
