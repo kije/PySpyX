@@ -251,7 +251,10 @@ class LocalCamera(Camera):
             return subprocess.check_call(
                 "kill %d %d" % (self.getPid(self.CAM_CAPTURE_VIDEO_CMD), self.getPid(self.CAM_VLC_CMD)),
                 shell=True
-            )
+            ) and (subprocess.check_call(
+                "killall %s" % self.CAM_VLC_CMD,
+                shell=True
+            ) if bool(self.getPid(self.CAM_VLC_CMD)) else True)
 
     def startSurveillance(self):
         """
