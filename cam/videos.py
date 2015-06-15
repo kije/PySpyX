@@ -77,7 +77,7 @@ class MotionVideo:
         """
         date = self.getCaptureDate()
 
-        return date.__format__("%d.%m.%Y %H:%M")
+        return date.__format__("%d.%m.%Y %H:%M:%S")
 
     def getVideoUrl(self):
         """
