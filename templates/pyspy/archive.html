@@ -18,11 +18,12 @@
                         {# @type video: cam.videos.MotionVideo #}
                         <li>
                             <div class="video">
+                                <h4>Video &laquo;{{ vide.filename }}&raquo;</h4>
                                 <video controls="controls">
                                     <source src="{{ video.getVideoUrl }}" type='video/mp4'/>
                                 </video>
                             </div>
-                            <span class="capture-date"><time>{{ video.getFormattedDate }}</time></span>
+                            <span class="capture-date">Captured: <time>{{ video.getFormattedDate }}</time></span>
                         </li>
                     {% endfor %}
                 </ul>
