@@ -52,10 +52,20 @@ def index(request):
 def archive(request):
     cam = LocalCamera()
     videos = cam.getCapturedMotionVideos()
+    total_videos = len(videos)
+
+    videos_per_page = 5
+    offset = (request.GET.page if "page" in request.GET else 0) * videos_per_page
+    paged_videos = videos[offset:offset + videos_per_page]
 
     template = loader.get_template('pyspy/archive.html')
     context = RequestContext(request, dict_={
-        "videos": videos
+        "videos": paged_videos,
+        "total_video_count": total_videos,
+        "offset": offset,
+        "current_page": ((total_videos / offset)).__floor__(),
+        "total_pages": (total_videos / videos_per_page).__ceil__(),
+        "page_range": range(0, (total_videos / videos_per_page).__ceil__())
     })
     return HttpResponse(template.render(context))
 

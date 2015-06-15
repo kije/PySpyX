@@ -26,6 +26,17 @@
                         </li>
                     {% endfor %}
                 </ul>
+
+                {% if total_pages > 1 %}
+                    <nav class="paginate-nav">
+                        <ol>
+                            {% for i in page_range %}
+                                <li{% if i == current_page %} class="current"{% endif %}><a
+                                        href="?page={{ i }}">{{ i }}</a></li>
+                            {% endfor %}
+                        </ol>
+                    </nav>
+                {% endif %}
             {% else %}
                 <p>No Videos</p>
             {% endif %}
