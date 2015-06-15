@@ -1,3 +1,10 @@
 #!/bin/sh
 
-hexdump /dev/urandom
+while :
+do
+    #read input
+	#echo $input
+	echo "still running..."
+	sleep 2
+done
+
