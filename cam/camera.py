@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import psutil
 
-from PySpyX import settings
 from PySpyX.settings import DEBUG, MOTION_VIDEO_DIRECTORY, BASE_DIR
 from cam.videos import MotionVideo
 
@@ -101,12 +100,12 @@ class LocalCamera(Camera):
     @type surveillance: Surveillance
     """
     CAM_CAPTURE_PHOTO_CMD = "/usr/bin/raspistill"
-    # CAM_CAPTURE_VIDEO_CMD = "/usr/bin/raspivid"
-    CAM_CAPTURE_VIDEO_CMD = settings.BASE_DIR + "/long_running_script.sh"
-    #CAM_VLC_CMD = "/usr/bin/cvlc"
-    CAM_VLC_CMD = settings.BASE_DIR + "/take_args_and_do_nothing_script.sh"
-    #CAM_MOTION_CMD = "/usr/bin/motion"
-    CAM_MOTION_CMD = settings.BASE_DIR + "/long_running_script.sh"
+    CAM_CAPTURE_VIDEO_CMD = "/usr/bin/raspivid"
+    # CAM_CAPTURE_VIDEO_CMD = settings.BASE_DIR + "/long_running_script.sh"
+    CAM_VLC_CMD = "/usr/bin/cvlc"
+    #CAM_VLC_CMD = settings.BASE_DIR + "/take_args_and_do_nothing_script.sh"
+    CAM_MOTION_CMD = "/usr/bin/motion"
+    #CAM_MOTION_CMD = settings.BASE_DIR + "/long_running_script.sh"
 
     VIDEO_DIRECTORY = MOTION_VIDEO_DIRECTORY
 
