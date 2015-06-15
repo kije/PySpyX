@@ -293,14 +293,14 @@ class LocalCamera(Camera):
         Check if surveillance mode is on
         :return: boolean
         """
-        return bool(self.getPid(self.CAM_MOTION_CMD))
+        return not bool(self.getPid(self.CAM_MOTION_CMD))
 
     def isStreamOn(self):
         """
         Check if stream is started
         :return: boolean
         """
-        return bool(self.getPid(self.CAM_VLC_CMD))
+        return not bool(self.getPid(self.CAM_VLC_CMD))
 
     def getPid(self, cmd):
         """
