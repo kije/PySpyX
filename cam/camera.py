@@ -297,8 +297,9 @@ class LocalCamera(Camera):
         for p in psutil.process_iter():
             try:
                 cmdln = [x.lower() for x in p.cmdline()]
+                print(cmdln)
                 cmdln.index(self.CAM_VLC_CMD)
-                print("surveillance is running", cmdln)
+                print("surveillance is running")
                 return True
             except ValueError:
                 pass
@@ -316,8 +317,9 @@ class LocalCamera(Camera):
         for p in psutil.process_iter():
             try:
                 cmdln = [x.lower() for x in p.cmdline()]
+                print(cmdln)
                 cmdln.index(self.CAM_VLC_CMD)
-                print("stream is running", cmdln)
+                print("stream is running")
 
                 return True
             except ValueError:
