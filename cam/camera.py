@@ -312,7 +312,6 @@ class LocalCamera(Camera):
             try:
                 cmdln = [x.lower() for x in p.cmdline()]
                 cmdln.index(cmd.lower())
-                print("stream is running")
 
                 return p.pid()
             except ValueError:

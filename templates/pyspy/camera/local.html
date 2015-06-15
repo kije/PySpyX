@@ -7,7 +7,7 @@
     <form method="post" action="{% url 'pyspy.views.control_local_cam' %}" class="controls-container">
         {% csrf_token %}
         <ul class="controls clearfix">
-            {% if camera.isStreamReachable or camera.isSurveillanceOn %}
+            {% if camera.isStreamOn or camera.isSurveillanceOn %}
                 <li>
                     <button class="button" type="submit" name="stop" value="1">
                         <span>Turn off</span>
