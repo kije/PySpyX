@@ -296,7 +296,7 @@ class LocalCamera(Camera):
         # check, if motion process is running
         for p in psutil.process_iter():
             try:
-                print(p.name, p.cmdline, p.exe().lower())
+                print(p.name(), p.cmdline(), p.exe().lower())
                 p.exe().lower().index(self.CAM_MOTION_CMD)
                 return True
             except ValueError:
@@ -314,7 +314,7 @@ class LocalCamera(Camera):
         # check, if streaming process is running
         for p in psutil.process_iter():
             try:
-                print(p.name, p.cmdline, p.exe().lower())
+                print(p.name(), p.cmdline(), p.exe().lower())
                 p.exe().lower().index(self.CAM_VLC_CMD)
 
                 return True
