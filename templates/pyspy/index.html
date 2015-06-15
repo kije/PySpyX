@@ -10,9 +10,7 @@
 
 {% block content %}
     <div id="outer-wrapper">
-        <header class="main-header">
-
-        </header>
+        {% include "pyspy/header.html" %}
         <div class="inner-wrapper">
             <form class="camera-add-container" action="{% url 'pyspy.views.add_camera' %}" method="post">
                 <h3>Add new Cam</h3>
