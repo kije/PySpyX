@@ -35,7 +35,10 @@ __author__ = 'kije'
 
 def index(request):
     cameras = []
-    cameras.append(LocalCamera())
+    local_cam = LocalCamera()
+    local_cam.isStreamOn()
+    local_cam.isSurveillanceOn()
+    cameras.append(local_cam)
     for camera in Camera.objects.all():
         cameras.append(RemoteCamera(camera))
 
