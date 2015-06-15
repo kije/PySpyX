@@ -314,11 +314,10 @@ class LocalCamera(Camera):
         """
         for p in psutil.process_iter():
             try:
-                print(p)
                 cmdln = [x.lower() for x in p.cmdline()]
                 cmdln.index(cmd.lower())
 
-                return p.pid()
+                return p.pid
             except ValueError:
                 pass
             except psutil.AccessDenied:
