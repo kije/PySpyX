@@ -250,7 +250,7 @@ class LocalCamera(Camera):
         """
         if self.isStreamOn():
             return subprocess.check_call(
-                "killall %s %s" % (self.CAM_CAPTURE_VIDEO_CMD, self.CAM_VLC_CMD),
+                "kill %d %d" % (self.getPid(self.CAM_CAPTURE_VIDEO_CMD), self.getPid(self.CAM_VLC_CMD)),
                 shell=True
             )
 
@@ -276,7 +276,7 @@ class LocalCamera(Camera):
         """
         if self.isSurveillanceOn():
             return subprocess.check_call(
-                "sudo killall %s" % self.CAM_MOTION_CMD,
+                "sudo kill %d" % self.getPid(self.CAM_MOTION_CMD),
                 shell=True
             )
 
@@ -293,40 +293,34 @@ class LocalCamera(Camera):
         Check if surveillance mode is on
         :return: boolean
         """
-        # check, if motion process is running
-        for p in psutil.process_iter():
-            try:
-                cmdln = [x.lower() for x in p.cmdline()]
-                cmdln.index(self.CAM_VLC_CMD.lower())
-                print("surveillance is running")
-                return True
-            except ValueError:
-                pass
-            except psutil.AccessDenied:
-                pass
-
-        return False
+        return bool(self.getPid(self.CAM_MOTION_CMD))
 
     def isStreamOn(self):
         """
         Check if stream is started
         :return: boolean
         """
-        # check, if streaming process is running
+        return bool(self.getPid(self.CAM_VLC_CMD))
+
+    def getPid(self, cmd):
+        """
+
+        :param cmd: string
+        :return: boolean|int
+        """
         for p in psutil.process_iter():
             try:
                 cmdln = [x.lower() for x in p.cmdline()]
-                cmdln.index(self.CAM_VLC_CMD.lower())
+                cmdln.index(cmd.lower())
                 print("stream is running")
 
-                return True
+                return p.pid()
             except ValueError:
                 pass
             except psutil.AccessDenied:
                 pass
 
         return False
-        # return self.isStreamReachable()
 
     def getCapturedMotionVideos(self):
         """
