@@ -70,6 +70,15 @@ class MotionVideo:
         """
         return datetime.datetime(self.year, self.month, self.day, self.hour, self.minute, self.second)
 
+    def getFormattedDate(self):
+        """
+
+        :return: string
+        """
+        date = self.getCaptureDate()
+
+        return date.__format__("%d.%m.%Y %H:%M")
+
     def getVideoUrl(self):
         """
         :return: string

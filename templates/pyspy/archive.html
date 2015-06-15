@@ -19,11 +19,12 @@
                     {% for video in videos %}
                         {# @type video: cam.videos.MotionVideo #}
                         <li>
-                            <video controls="controls">
-                                <source src="{{ video.getVideoUrl }}" type='video/mp4'/>
-                            </video>
-                            {{ video.getVideoUrl }}
-                            {{ video.getCaptureDate.isoformat }}
+                            <div class="video">
+                                <video controls="controls">
+                                    <source src="{{ video.getVideoUrl }}" type='video/mp4'/>
+                                </video>
+                            </div>
+                            <span class="capture-date"><time>{{ video.getFormattedDate }}</time></span>
                         </li>
                     {% endfor %}
                 </ul>
