@@ -258,6 +258,7 @@ class LocalCamera(Camera):
                     "killall vlc",
                     shell=True
                 )
+                print("Killed other vlc instance")
             except:
                 pass
 
@@ -322,7 +323,6 @@ class LocalCamera(Camera):
         :return: boolean|int
         """
         for p in psutil.process_iter():
-            print(p.cmdline())
             cmdln = p.cmdline()
 
             is_cmd = False
