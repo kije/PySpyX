@@ -102,7 +102,7 @@ class LocalCamera(Camera):
     CAM_CAPTURE_PHOTO_CMD = "/usr/bin/raspistill"
     CAM_CAPTURE_VIDEO_CMD = "/usr/bin/raspivid"
     # CAM_CAPTURE_VIDEO_CMD = settings.BASE_DIR + "/long_running_script.sh"
-    CAM_VLC_CMD = "/usr/bin/vlc"
+    CAM_VLC_CMD = "/usr/bin/cvlc"
     #CAM_VLC_CMD = settings.BASE_DIR + "/take_args_and_do_nothing_script.sh"
     CAM_MOTION_CMD = "/usr/bin/motion"
     #CAM_MOTION_CMD = settings.BASE_DIR + "/long_running_script.sh"
@@ -234,7 +234,7 @@ class LocalCamera(Camera):
         :param fps: int
         :return: string
         """
-        return "%s | %s -I dummy %s stream:///dev/stdin --sout '#rtp{sdp=rtsp://:%d/}' :demux=h264" % (
+        return "%s | %s %s stream:///dev/stdin --sout '#rtp{sdp=rtsp://:%d/}' :demux=h264" % (
         # standart http stream '#standard{access=http,mux=ts,dst=:%d}'
             self.__getVideoCmd__(path="-", length=0, width=width, height=height, fps=fps),
             self.CAM_VLC_CMD,
@@ -312,16 +312,25 @@ class LocalCamera(Camera):
         :return: boolean|int
         """
         for p in psutil.process_iter():
-            try:
-                print(p.cmdline())
-                cmdln = [x.lower() for x in p.cmdline()]
-                cmdln.index(cmd.lower())
+            print(p.cmdline())
+            cmdln = p.cmdline()
 
-                return p.pid
+            is_cmd = False
+
+            try:
+                for cmd_part in cmdln:
+                    if not is_cmd:
+                        cmd_part = cmd_part.lower()
+                        cmd_part.index(cmd.lower())
+                        is_cmd = True
+
             except ValueError:
                 pass
             except psutil.AccessDenied:
                 pass
+
+            if is_cmd:
+                return p.pid
 
         return False
 
