@@ -248,13 +248,20 @@ class LocalCamera(Camera):
         Stops the stream (if started)
         """
         if self.isStreamOn():
-            return subprocess.check_call(
+            res = subprocess.check_call(
                 "kill %d %d" % (self.getPid(self.CAM_CAPTURE_VIDEO_CMD), self.getPid(self.CAM_VLC_CMD)),
                 shell=True
-            ) and (subprocess.check_call(
-                "killall %s" % self.CAM_VLC_CMD,
-                shell=True
-            ) if bool(self.getPid(self.CAM_VLC_CMD)) else True)
+            )
+
+            try:
+                subprocess.check_call(
+                    "killall vlc",
+                    shell=True
+                )
+            except:
+                pass
+
+            return res
 
     def startSurveillance(self):
         """
