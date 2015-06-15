@@ -3,5 +3,5 @@
 while :
 do
     read input
-	echo input
+	echo $input
 done
