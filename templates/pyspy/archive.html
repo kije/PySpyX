@@ -29,6 +29,7 @@
 
                 {% if total_pages > 1 %}
                     <nav class="paginate-nav">
+                        <h3>Pages</h3>
                         <ol>
                             {% for i in page_range %}
                                 <li{% if i == current_page %} class="current"{% endif %}><a
