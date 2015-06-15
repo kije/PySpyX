@@ -14,7 +14,7 @@
                     </button>
                 </li>
             {% endif %}
-            {% if not camera.isStreamReachable %}
+            {% if not camera.isStreamOn %}
                 <li>
                     <button class="button" type="submit" name="stream_start" value="1">
                         <span>Start stream</span>
