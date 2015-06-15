@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import math
+
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_ipv46_address
 from django.shortcuts import redirect
@@ -65,8 +67,8 @@ def archive(request):
         "total_video_count": total_videos,
         "offset": offset,
         "current_page": page,
-        "total_pages": (total_videos / videos_per_page).__ceil__(),
-        "page_range": range(0, (total_videos / videos_per_page).__ceil__())
+        "total_pages": math.ceil(total_videos / videos_per_page),
+        "page_range": range(0, math.ceil(total_videos / videos_per_page))
     })
     return HttpResponse(template.render(context))
 
