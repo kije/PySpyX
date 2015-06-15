@@ -313,6 +313,7 @@ class LocalCamera(Camera):
         """
         for p in psutil.process_iter():
             try:
+                print(p.cmdline())
                 cmdln = [x.lower() for x in p.cmdline()]
                 cmdln.index(cmd.lower())
 
