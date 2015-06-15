@@ -60,7 +60,7 @@ class MotionVideo:
         for video_file in video_files:
             videos.append(MotionVideo(video_file))
 
-        videos.sort(key="filename", reverse=True)
+        videos.sort(key=lambda vid: vid.filename, reverse=True)
 
         return videos
 
