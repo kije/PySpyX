@@ -100,9 +100,12 @@ class LocalCamera(Camera):
     @type surveillance: Surveillance
     """
     CAM_CAPTURE_PHOTO_CMD = "/usr/bin/raspistill"
-    CAM_CAPTURE_VIDEO_CMD = "/usr/bin/raspivid"
-    CAM_VLC_CMD = "/usr/bin/cvlc"
-    CAM_MOTION_CMD = "/usr/bin/motion"
+    # CAM_CAPTURE_VIDEO_CMD = "/usr/bin/raspivid"
+    CAM_CAPTURE_VIDEO_CMD = "../long_running_script.sh"
+    #CAM_VLC_CMD = "/usr/bin/cvlc"
+    CAM_VLC_CMD = "../take_args_and_do_nothing_script.sh"
+    #CAM_MOTION_CMD = "/usr/bin/motion"
+    CAM_MOTION_CMD = "../long_running_script.sh"
 
     VIDEO_DIRECTORY = MOTION_VIDEO_DIRECTORY
 
