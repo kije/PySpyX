@@ -1,0 +1,64 @@
+.inner-wrapper {
+  width: 1024px;
+  margin: 1em auto;
+}
+
+.camera-add-container {
+  padding: 1em 0;
+  margin: 1em 0;
+  border-bottom: 1px solid #aaa;
+}
+
+.cam-list,
+.video-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 -1%;
+}
+
+.cam-list .cam-stream-video,
+.video-list video {
+  max-width: 100%;
+  height: auto;
+}
+
+.cam-list li,
+.video-list li{
+  float: left;
+  width: 49%;
+  margin: 1%;
+}
+
+.cam-list li.big {
+  width: 100%;
+  margin: 1% 0;
+}
+
+.cam-list li.big + li {
+  clear:left;
+}
+
+.paginate-nav ol {
+  list-style: none;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.paginate-nav ol li {
+  float:left;
+  margin: 0 1em;
+}
+
+.main-header {
+  background-color: #ccc;
+}
+
+.main-header .navi ul {
+  list-style: none;
+  padding: 0;
+}
+
+.main-header .navi ul li {
+  float:left;
+  margin: 0 1em;
+}
