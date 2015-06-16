@@ -54,7 +54,7 @@ class MotionVideo:
         :param directory: string
         :return: MotionVideo[]
         """
-        video_files = glob.glob(directory + "/*.mp4")
+        video_files = glob.glob(directory + "/*.ogg")
         videos = []
 
         for video_file in video_files:
