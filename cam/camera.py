@@ -251,7 +251,7 @@ class LocalCamera(Camera):
         try:
             for cmd in ["vlc", "cvlc", "raspivid"]:
                 successfull = successfull and subprocess.check_call(
-                    "sudo killall -KILL %s" % cmd,
+                    "killall -KILL %s" % cmd,
                     shell=True
                 )
         except:
