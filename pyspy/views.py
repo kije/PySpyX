@@ -57,7 +57,7 @@ def archive(request):
     total_videos = len(videos)
 
     page = int(request.GET.get("page", 0))
-    videos_per_page = 10
+    videos_per_page = 5
     offset = page * videos_per_page
     paged_videos = videos[offset:offset + videos_per_page]
 
