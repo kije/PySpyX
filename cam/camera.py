@@ -249,13 +249,13 @@ class LocalCamera(Camera):
         """
         successfull = False
         try:
-            for cmd in ["vlc", "cvlc", "raspivid"]:
+            for cmd in ["raspivid", "vlc", "cvlc"]:
                 successfull = successfull and subprocess.check_call(
                     "killall -KILL %s" % cmd,
                     shell=True
                 )
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
         return successfull
         """if self.isStreamOn():
@@ -301,8 +301,8 @@ class LocalCamera(Camera):
                 "sudo killall -KILL motion",
                 shell=True
             )
-        except:
-            pass
+        except Exception as e:
+            print(e)
         """if self.isSurveillanceOn():
             return subprocess.check_call(
                 "sudo kill %d" % self.getPid(self.CAM_MOTION_CMD),
