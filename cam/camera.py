@@ -247,7 +247,18 @@ class LocalCamera(Camera):
         """
         Stops the stream (if started)
         """
-        if self.isStreamOn():
+        successfull = False
+        try:
+            for cmd in ["vlc", "cvlc", "raspivid"]:
+                successfull = successfull and subprocess.check_call(
+                    "sudo killall %s" % cmd,
+                    shell=True
+                )
+        except:
+            pass
+
+        return successfull
+        """if self.isStreamOn():
             res = subprocess.check_call(
                 "kill %d %d" % (self.getPid(self.CAM_CAPTURE_VIDEO_CMD), self.getPid(self.CAM_VLC_CMD)),
                 shell=True
@@ -263,6 +274,7 @@ class LocalCamera(Camera):
                 pass
 
             return res
+        """
 
     def startSurveillance(self):
         """
@@ -284,11 +296,19 @@ class LocalCamera(Camera):
         """
         Stops the surveillance mode (if started)
         """
-        if self.isSurveillanceOn():
+        try:
+            return subprocess.check_call(
+                "sudo killall motion",
+                shell=True
+            )
+        except:
+            pass
+        """if self.isSurveillanceOn():
             return subprocess.check_call(
                 "sudo kill %d" % self.getPid(self.CAM_MOTION_CMD),
                 shell=True
             )
+        """
 
     def stopAll(self):
         """
