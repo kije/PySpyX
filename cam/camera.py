@@ -248,14 +248,16 @@ class LocalCamera(Camera):
         Stops the stream (if started)
         """
         successfull = False
-        try:
-            for cmd in ["raspivid", "vlc", "cvlc", self.CAM_CAPTURE_VIDEO_CMD, self.CAM_VLC_CMD]:
+
+        for cmd in ["raspivid", "vlc", "cvlc", self.CAM_CAPTURE_VIDEO_CMD, self.CAM_VLC_CMD]:
+            try:
                 successfull = successfull and subprocess.check_call(
                     "sudo killall %s" % cmd,
                     shell=True
                 )
-        except Exception as e:
-            print(e)
+            except Exception as e:
+                print(e)
+
 
         return successfull
         """if self.isStreamOn():
