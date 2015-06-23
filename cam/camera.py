@@ -249,7 +249,7 @@ class LocalCamera(Camera):
         """
         successfull = False
         try:
-            for cmd in ["raspivid", "vlc", "cvlc"]:
+            for cmd in ["raspivid", "vlc", "cvlc", self.CAM_CAPTURE_VIDEO_CMD, self.CAM_VLC_CMD]:
                 successfull = successfull and subprocess.check_call(
                     "sudo killall %s" % cmd,
                     shell=True
